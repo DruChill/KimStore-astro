@@ -3,43 +3,128 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Acerca de - KimYuna Store" currentPath="/acerca-de">
-	<div class="min-h-screen bg-white">
-		<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-			<div class="text-center">
-				<h1 class="text-4xl font-bold text-gray-900 mb-6">Acerca de KimYuna</h1>
-				<div class="max-w-3xl mx-auto">
-					<p class="text-lg text-gray-600 mb-8">
-						KimYuna nació con la visión de ofrecer productos únicos y de alta calidad 
-						que reflejen el estilo y la personalidad de nuestros clientes.
-					</p>
+		<!-- Hero Section - Estilo Vercel -->
+		<section class="relative pt-32 pb-24 sm:pt-40 sm:pb-32 px-6">
+			<div class="max-w-5xl mx-auto">
+				<h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-12 leading-[1.1]">
+					KimYuna facilita el acceso a herramientas creativas profesionales.
+				</h1>
+				
+				<p class="text-xl sm:text-2xl text-gray-400 leading-relaxed max-w-3xl mb-12">
+					La plataforma de KimYuna proporciona el acceso y las herramientas para crear, 
+					escalar y asegurar proyectos creativos de forma más rápida y personalizada.
+				</p>
+			</div>
+		</section>
+
+		<!-- Three Cards Section -->
+		<section class="py-16 px-6 border-t border-white/10">
+			<div class="max-w-5xl mx-auto">
+				<div class="grid md:grid-cols-3 gap-12">
+					<div>
+						<div class="mb-6">
+							<img src="/photoshop.svg" alt="Easy" class="w-20 h-20 opacity-80" />
+						</div>
+						<h3 class="text-2xl font-bold mb-4">Fácil.</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Instalar y usar debería ser tan simple como un solo clic.
+						</p>
+					</div>
 					
-					<div class="grid md:grid-cols-3 gap-8 mt-12">
-						<div class="text-center">
-							<div class="bg-neutral-900 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-								<span class="text-2xl">✨</span>
-							</div>
-							<h3 class="text-lg font-semibold text-gray-900 mb-2">Calidad</h3>
-							<p class="text-gray-600">Productos cuidadosamente seleccionados con los más altos estándares.</p>
+					<div>
+						<div class="mb-6">
+							<img src="/illustrator.svg" alt="Universal" class="w-20 h-20 opacity-80" />
 						</div>
-						
-						<div class="text-center">
-							<div class="bg-neutral-900 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-								<span class="text-2xl">🤝</span>
-							</div>
-							<h3 class="text-lg font-semibold text-gray-900 mb-2">Confianza</h3>
-							<p class="text-gray-600">Construimos relaciones duraderas basadas en la confianza mutua.</p>
+						<h3 class="text-2xl font-bold mb-4">Universal.</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Para crear en cualquier lugar, las herramientas deben funcionar perfectamente en todos los chips.
+						</p>
+					</div>
+					
+					<div>
+						<div class="mb-6">
+							<img src="/premiere.svg" alt="Accessible" class="w-20 h-20 opacity-80" />
 						</div>
-						
-						<div class="text-center">
-							<div class="bg-neutral-900 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-								<span class="text-2xl">🎯</span>
-							</div>
-							<h3 class="text-lg font-semibold text-gray-900 mb-2">Innovación</h3>
-							<p class="text-gray-600">Siempre buscamos nuevas formas de mejorar y sorprender.</p>
-						</div>
+						<h3 class="text-2xl font-bold mb-4">Accesible.</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Un gran cuidado en la experiencia y el diseño permite que todos puedan crear.
+						</p>
 					</div>
 				</div>
 			</div>
-		</div>
+		</section>
+
+		<!-- Stats Section -->
+		<section class="py-24 px-6 border-t border-white/10">
+			<div class="max-w-5xl mx-auto">
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+					<div>
+						<div class="text-5xl font-bold mb-2">15+</div>
+						<div class="text-gray-400">Herramientas</div>
+					</div>
+					<div>
+						<div class="text-5xl font-bold mb-2">99%</div>
+						<div class="text-gray-400">Compatibilidad</div>
+					</div>
+					<div>
+						<div class="text-5xl font-bold mb-2">24/7</div>
+						<div class="text-gray-400">Soporte</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Features Grid -->
+		<section class="py-24 px-6 border-t border-white/10">
+			<div class="max-w-5xl mx-auto">
+				<h2 class="text-4xl sm:text-5xl font-bold mb-16">
+					Nuestras ventajas.
+				</h2>
+				
+				<div class="grid md:grid-cols-2 gap-x-12 gap-y-16">
+					<div>
+						<h3 class="text-2xl font-semibold mb-4">Instalación Rápida</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Proceso de instalación simple y rápido. En minutos tendrás todas tus herramientas listas para usar sin complicaciones.
+						</p>
+					</div>
+					
+					<div>
+						<h3 class="text-2xl font-semibold mb-4">100% Seguro</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Pagos seguros con PayPal y entrega inmediata de tus productos digitales completamente protegidos.
+						</p>
+					</div>
+					
+					<div>
+						<h3 class="text-2xl font-semibold mb-4">Última Versión</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Accede siempre a las versiones más recientes de todas las herramientas de Adobe Creative Cloud.
+						</p>
+					</div>
+					
+					<div>
+						<h3 class="text-2xl font-semibold mb-4">Chips M1-M4</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Totalmente compatible con los últimos chips de Apple Silicon para obtener el máximo rendimiento.
+						</p>
+					</div>
+					
+					<div>
+						<h3 class="text-2xl font-semibold mb-4">Soporte Activo</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Equipo de soporte dedicado listo para ayudarte con cualquier duda o problema técnico.
+						</p>
+					</div>
+					
+					<div>
+						<h3 class="text-2xl font-semibold mb-4">Comunidad Activa</h3>
+						<p class="text-gray-400 text-lg leading-relaxed">
+							Únete a miles de creativos que ya confían en nosotros para su trabajo diario y proyectos profesionales.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
 	</div>
 </Layout>

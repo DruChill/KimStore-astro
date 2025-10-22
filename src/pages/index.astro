@@ -1,10 +1,40 @@
 ---
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import { getCreativeTools } from '../lib/firestore';
+
+// Obtener datos de Firestore
+const products = await getCreativeTools();
+
+// Usar productos de Firestore si existen, de lo contrario usar ejemplos
+const displayProducts = products.length > 0 ? products : [];
 ---
 
 <Layout title="Inicio - KimYuna Store" currentPath="/">
 	<div class="min-h-screen">
-			<Welcome />
+		<!-- Sección de Productos -->
+		<section class="bg-gray-50 py-12">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="text-center mb-12">
+					<h2 class="text-4xl font-bold text-gray-900 mb-4">Nuestros Productos</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						Descubre herramientas profesionales seleccionadas cuidadosamente para potenciar tu creatividad y productividad.
+					</p>
+				</div>
+				
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
+					{displayProducts.map(product => (
+						<Card 
+							name={product.name}
+							price={product.price}
+							description={product.description}
+							ico={product.ico}
+							id={product.id}
+						/>
+					))}
+				</div>
+			</div>
+		</section>
 	</div>
 </Layout>

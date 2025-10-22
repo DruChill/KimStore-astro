@@ -1,8 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import { getCreativeTools } from '../lib/firestore';
 
-// Datos de ejemplo para demostrar el componente
+// Obtener datos de Firestore
+const products = await getCreativeTools();
+
+// Datos de ejemplo para demostrar el componente (se usan si Firestore está vacío)
 const sampleProducts = [
 	{
 		name: "Photoshop CC 2024",
@@ -26,6 +30,9 @@ const sampleProducts = [
 		id: "davinci-resolve"
 	}
 ];
+
+// Usar productos de Firestore si existen, de lo contrario usar ejemplos
+const displayProducts = products.length > 0 ? products : sampleProducts;
 ---
 
 <Layout title="Productos - KimYuna Store">
@@ -39,7 +46,7 @@ const sampleProducts = [
 			</div>
 			
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-				{sampleProducts.map(product => (
+				{displayProducts.map(product => (
 					<Card 
 						name={product.name}
 						price={product.price}

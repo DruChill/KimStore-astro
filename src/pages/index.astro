@@ -1,5 +1,4 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import { getCreativeTools, type CreativeTool } from '../lib/firestore';
@@ -18,6 +17,13 @@ const products = await getCreativeTools();
 					<p class="text-lg text-gray-400 max-w-2xl mx-auto">
 						¡Imagínate cuánto puedes llegar a ahorrar con esto. Consigue las últimas versiones de las herramientas creativas más populares con un solo clic. Totalmente compatible con chips M1, M2, M3 y M4.
 					</p>
+					<div class="mt-6 inline-block px-4 py-2 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+						<p class="text-purple-300 text-sm flex items-center gap-2">
+							<span>🎃</span>
+							<span>¿Quieres saber si funcionará en tu Mac? <a href="https://youtu.be/fPpHrKAPWmw" target="_blank" class="underline">Click aquí</a></span>
+							<span>🕸️</span>
+						</p>
+					</div>
 				</div>
 				
 				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">

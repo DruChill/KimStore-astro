@@ -1,23 +1,40 @@
 ---
-import astroLogo from '../assets/astro.svg';
-import background from '../assets/background.svg';
+import Card from './Card.astro';
 import '../styles/global.css';
+
+// Datos de ejemplo para las tarjetas
+const products = [
+	{
+		name: "Final Cut Pro",
+		price: 299,
+		description: "Editor de video profesional para Mac. Crea contenido cinematográfico con herramientas avanzadas de edición.",
+		ico: "finalcut",
+		id: "finalcut-pro"
+	}
+];
 ---
 
 <div class="bg-neutral-900 text-white">
 	<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-		<div class="text-center">
+		<div class="text-center mb-12">
 			<h1 class="text-4xl font-bold mb-6">Bienvenido a KimYuna Store</h1>
 			<p class="text-lg mb-8">
 				 Descubre una experiencia de compra única con productos seleccionados especialmente para ti.
 			</p>
-			<div class="flex justify-center">
-				<a 
-					href="/acerca-de" 
-					class="bg-white text-neutral-900 font-semibold px-6 py-3 rounded-md hover:bg-neutral-100 transition-colors duration-200"
-				>
-					Saber más sobre nosotros
-				</a>
+		</div>
+		
+		<!-- Sección de productos destacados -->
+		<div class="mb-12">
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+				{products.map(product => (
+					<Card 
+						name={product.name}
+						price={product.price}
+						description={product.description}
+						ico={product.ico}
+						id={product.id}
+					/>
+				))}
 			</div>
 		</div>
 	</div>

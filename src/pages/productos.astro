@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+
+// Datos de ejemplo para demostrar el componente
+const sampleProducts = [
+	{
+		name: "Photoshop CC 2024",
+		price: 299,
+		description: "Editor de imágenes profesional con inteligencia artificial integrada. Perfecto para retoque fotográfico y diseño gráfico.",
+		ico: "adobe",
+		id: "photoshop-cc"
+	},
+	{
+		name: "Figma Pro",
+		price: 144,
+		description: "Herramienta de diseño colaborativo en la nube. Ideal para equipos de diseño UI/UX que trabajan de forma remota.",
+		ico: "sketch",
+		id: "figma-pro"
+	},
+	{
+		name: "DaVinci Resolve Studio",
+		price: 395,
+		description: "Suite completa de post-producción para video profesional. Incluye edición, corrección de color y efectos visuales.",
+		ico: "finalcut",
+		id: "davinci-resolve"
+	}
+];
+---
+
+<Layout title="Productos - KimYuna Store">
+	<main class="min-h-screen bg-gray-50 py-12">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-12">
+				<h1 class="text-4xl font-bold text-gray-900 mb-4">Nuestros Productos</h1>
+				<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+					Descubre herramientas profesionales seleccionadas cuidadosamente para potenciar tu creatividad y productividad.
+				</p>
+			</div>
+			
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+				{sampleProducts.map(product => (
+					<Card 
+						name={product.name}
+						price={product.price}
+						description={product.description}
+						ico={product.ico}
+						id={product.id}
+					/>
+				))}
+			</div>
+			
+			<!-- Sección de ejemplo de uso individual -->
+			<div class="mt-16 pt-16 border-t border-gray-200">
+				<h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Ejemplo de Tarjeta Individual</h2>
+				<div class="flex justify-center">
+					<Card 
+						name="Herramienta Personalizada"
+						price={99}
+						description="Este es un ejemplo de cómo usar el componente Card con datos personalizados. Puedes modificar todos los valores según tus necesidades."
+						ico="adobe"
+						id="custom-tool"
+					/>
+				</div>
+			</div>
+		</div>
+	</main>
+</Layout>

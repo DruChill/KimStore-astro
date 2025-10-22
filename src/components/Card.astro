@@ -1,0 +1,77 @@
+---
+// Interfaz para las props del componente
+export interface ProductCardProps {
+  name: string;
+  price: number;
+  description: string;
+  ico: string;
+  id: string;
+}
+
+// Props con valores por defecto para la demostración
+const {
+  name = "Herramienta Creativa",
+  price = 99,
+  description = "Una herramienta poderosa para potenciar tu creatividad y productividad.",
+  ico = "sketch",
+  id = "1"
+} = Astro.props as ProductCardProps;
+---
+
+<div class="max-w-xs w-full p-6 bg-white rounded-lg shadow border border-gray-200 font-sans flex flex-col justify-between space-y-4">
+  <!-- Header -->
+  <div class="flex items-start flex-col space-y-3">
+    <div class="flex gap-2">
+      <img
+        src="/Ae.svg"
+        alt={name}
+        width="32"
+        height="32"
+        class="w-8 h-8"
+      />
+      <img
+        src="/apple.svg"
+        alt={name}
+        width="32"
+        height="32"
+        class="w-8 h-8"
+      />
+    </div>
+    <h2 class="text-lg font-semibold text-black">{name}</h2>
+  </div>
+
+  <!-- Precio -->
+  <div>
+    <p class="mb-1 text-2xl font-semibold text-black leading-snug">
+      ${price}<span class="text-base font-normal text-gray-700">/Pago único</span>
+    </p>
+    <img
+      src="/cards/paypal.svg"
+      alt="PayPal"
+      width="48"
+      height="48"
+      class="w-12 h-12"
+    />
+  </div>
+
+  <!-- Descripción -->
+  <p class="text-sm text-gray-800 leading-relaxed">
+    {description}
+  </p>
+
+  <!-- Footer con ícono y botón -->
+  <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+    <div class="flex items-center text-xs text-gray-600">
+      <!-- Ícono de candado usando SVG inline -->
+      <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+      </svg>
+      Transacción segura
+    </div>
+    <a href={`/tool/${id}`}>
+      <button class="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded-full text-sm font-semibold hover:opacity-90 transition">
+        Comprar
+      </button>
+    </a>
+  </div>
+</div>

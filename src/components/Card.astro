@@ -23,9 +23,8 @@ const {
 <div class="max-w-xs w-full p-6 bg-white rounded-lg shadow border border-gray-200 font-sans flex flex-col justify-between space-y-4">
   <!-- Header -->
   <div class="flex items-start flex-col space-y-3">
-    <div class="flex gap-2">
-      {ico && (
-        <img
+    <div class="flex gap-2 items-center">
+      <img
           src={`/${ico}.svg`}
           alt={name}
           width="32"
@@ -34,7 +33,11 @@ const {
           transition:name={`product-icon-${id}`}
           transition:animate="morph"
         />
-      )}
+      <img
+          src="/apple.svg"
+          alt="Apple"
+          class="w-8 h-8"
+        />
     </div>
     <h2 class="text-lg font-semibold text-black">{name}</h2>
   </div>

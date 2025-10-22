@@ -2,10 +2,20 @@
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import { getCreativeTools } from '../lib/firestore';
+import { getCreativeTools, type CreativeTool } from '../lib/firestore';
+import staticProducts from '../data/products.json';
 
-// Obtener datos de Firestore
-const products = await getCreativeTools();
+// Usar datos estáticos por defecto, intentar Firestore después
+let products: any[] = staticProducts;
+
+try {
+  const firestoreProducts = await getCreativeTools();
+  if (firestoreProducts && firestoreProducts.length > 0) {
+    products = firestoreProducts;
+  }
+} catch (error) {
+  console.log("⚡ Usando productos estáticos");
+}
 ---
 
 <Layout title="Inicio - KimYuna Store" currentPath="/">

@@ -1,0 +1,268 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getToolById, getCreativeTools } from '../../lib/firestore';
+import productsData from '../../data/products.json';
+import { Clock, Monitor, Cpu, ShoppingCart, Languages, ShieldCheck, ShoppingBasket } from 'lucide-astro';
+
+// Generar rutas estáticas para todos los productos (estáticos + Firestore)
+export async function getStaticPaths() {
+  const staticPaths = productsData.map(product => ({
+    params: { id: product.id }
+  }));
+
+  try {
+    // Intentar obtener productos de Firestore también
+    const firestoreProducts = await getCreativeTools();
+    const firestorePaths = firestoreProducts.map(product => ({
+      params: { id: product.id }
+    }));
+    
+    // Combinar ambos, evitando duplicados
+    const allPaths = [...staticPaths];
+    firestorePaths.forEach(path => {
+      if (!allPaths.some(p => p.params.id === path.params.id)) {
+        allPaths.push(path);
+      }
+    });
+    
+    return allPaths;
+  } catch (error) {
+    console.log("Error obteniendo productos de Firestore, usando solo estáticos");
+    return staticPaths;
+  }
+}
+
+// Obtener el ID del producto desde la URL
+const { id } = Astro.params;
+
+// Intentar obtener desde Firestore primero, luego fallback a datos estáticos
+let tool = productsData.find(p => p.id === id);
+
+try {
+  const firestoreTool = await getToolById(id || '');
+  if (firestoreTool) {
+    tool = {
+      ...firestoreTool,
+      lastUpdated: firestoreTool.lastUpdated ? new Date(firestoreTool.lastUpdated) : undefined
+    } as any;
+  }
+} catch (error) {
+  console.log("Usando datos estáticos para el producto");
+}
+
+// Si no se encuentra el producto, mostrar 404
+if (!tool) {
+  return Astro.redirect('/404');
+}
+
+// Función para formatear fecha
+const formatDate = (dateString?: string) => {
+  if (!dateString) return 'Fecha no disponible';
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  } catch {
+    return 'Fecha no disponible';
+  }
+};
+
+// Valores por defecto para datos estáticos
+const status = tool.status || '100% Funcional';
+const tags = tool.tags || ['Diseño', 'Herramienta', 'Profesional'];
+const videoUrl = tool.videoUrl || 'https://www.youtube.com/embed/k_TfGHam5r0?si=JRsVxI4Y2QR52Msp';
+const lastUpdated = tool.lastUpdated || new Date().toISOString();
+---
+
+<Layout title={`${tool.name} - KimYuna Store`} currentPath={`/producto/${id}`}>
+  <div class="bg-black text-white min-h-screen">
+    <!-- Main Tool Layout -->
+    <div class="px-4 sm:px-6 lg:px-12 py-8 lg:py-16">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 max-w-7xl mx-auto">
+        <!-- Left Side - Tool Video -->
+        <div class="w-full">
+          <div class="relative w-full aspect-video bg-neutral-900 rounded-2xl overflow-hidden border border-neutral-800">
+            <iframe 
+              width="100%" 
+              height="100%" 
+              src={videoUrl}
+              title="YouTube video player" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              class="w-full h-full"
+            ></iframe>
+          </div>
+        </div>
+
+        <!-- Right Side - Tool Details -->
+        <div class="flex flex-col justify-center space-y-8">
+          <!-- Tool Info -->
+          <div class="space-y-6">
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <img
+                  src={`/${tool.ico}.svg`}
+                  alt={tool.name}
+                  width="50"
+                  height="50"
+                  class="w-12 h-12"
+                />
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
+                  {tool.name}
+                </h1>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <span class="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-6 py-3 text-lg font-semibold inline-block">
+                  ${tool.price.toFixed(2)} USD
+                </span>
+
+                <div class="flex items-center gap-2 text-neutral-400 text-sm">
+                  <Clock class="h-4 w-4" />
+                  <span>{formatDate(lastUpdated)}</span>
+                </div>
+              </div>
+
+              <p class="text-neutral-300 text-lg leading-relaxed">
+                {tool.description}
+              </p>
+            </div>
+
+            <hr class="border-neutral-700" />
+          </div>
+
+          <!-- Purchase Section -->
+          <div class="space-y-6">
+            <div>
+              {tool.linkPayment ? (
+                <a 
+                  href={tool.linkPayment} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="block w-full"
+                >
+                  <button
+                    class="w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart class="h-5 w-5" />
+                    Comprar Ahora
+                  </button>
+                </a>
+              ) : (
+                <button
+                  disabled
+                  class="w-full h-14 text-lg font-semibold bg-neutral-600 text-neutral-300 border-0 rounded-full cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <Clock class="h-5 w-5" />
+                  Próximamente
+                </button>
+              )}
+              <div class="mt-2 text-center text-xs text-neutral-400">
+                {tool.linkPayment 
+                  ? "No ofrecemos devoluciones, así que asegúrate de instalar primero la app."
+                  : "Estamos migrando este producto. Pronto estará disponible."
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Requirements & Features -->
+      <div class="mt-16 lg:mt-24 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- System Requirements -->
+          <div class="bg-neutral-800/50 border border-neutral-700 rounded-lg p-6">
+            <div class="mb-6">
+              <h3 class="text-white font-semibold text-xl flex items-center gap-3">
+                <Monitor class="h-6 w-6" />
+                Información Adicional
+              </h3>
+            </div>
+            <div class="space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <p class="text-neutral-400 text-sm flex items-center gap-2">
+                    <Monitor class="h-4 w-4" />
+                    Sistema Operativo
+                  </p>
+                  <p class="text-white font-medium">
+                    macOS 14 hasta 26.0
+                  </p>
+                </div>
+
+                <div class="space-y-2">
+                  <p class="text-neutral-400 text-sm flex items-center gap-2">
+                    <Languages class="h-4 w-4" />
+                    Idioma del Software
+                  </p>
+                  <p class="text-white font-medium">
+                    Inglés / US
+                  </p>
+                </div>
+
+                <div class="space-y-2">
+                  <p class="text-neutral-400 text-sm flex items-center gap-2">
+                    <Cpu class="h-4 w-4" />
+                    RAM Mínima
+                  </p>
+                  <p class="text-white font-medium">
+                    8 GB
+                  </p>
+                </div>
+
+                <div class="space-y-2">
+                  <p class="text-neutral-400 text-sm flex items-center gap-2">
+                    <ShieldCheck class="h-4 w-4" />
+                    Fiabilidad
+                  </p>
+                  <p class="text-white font-medium">
+                    {status}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features & Info -->
+          <div class="bg-neutral-800/50 border border-neutral-700 rounded-lg p-6">
+            <div class="mb-6">
+              <h3 class="text-white capitalize font-semibold text-xl flex items-center gap-3">
+                <ShoppingBasket class="h-6 w-6" />
+                Opciones de Instalación
+              </h3>
+            </div>
+            <div class="space-y-6">
+              <!-- Información General -->
+              <div class="pt-4 border-t border-neutral-700">
+                <h5 class="text-white font-medium mb-2">Información General:</h5>
+                <ul class="list-disc list-inside text-neutral-400 font-medium space-y-1 text-sm">
+                  <li>Activado de por vida (único pago)</li>
+                  <li>Compatible con chips M1, M2, M3 y M4</li>
+                  <li>Soporte por correo electrónico incluido</li>
+                </ul>
+              </div>
+              
+              <div class="space-y-2">
+                <div class="flex flex-wrap gap-2">
+                  {tags.map((tag: string) => (
+                    <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Nota sobre futuras características -->
+        <div class="mt-8 text-center text-neutral-500 text-sm">
+          <p>💡 Próximamente: Sistema de reseñas y cupones de descuento para compradores</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

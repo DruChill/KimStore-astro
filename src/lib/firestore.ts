@@ -7,6 +7,11 @@ export interface CreativeTool {
   price: number;
   description: string;
   ico: string;
+  linkPayment?: string;
+  status?: string;
+  tags?: string[];
+  lastUpdated?: Date;
+  videoUrl?: string;
 }
 
 /**
@@ -29,6 +34,30 @@ export async function getCreativeTools(): Promise<CreativeTool[]> {
   } catch (error) {
     console.error("Error obteniendo herramientas creativas:", error);
     return [];
+  }
+}
+
+/**
+ * Obtiene una herramienta específica por ID
+ */
+export async function getToolById(id: string): Promise<CreativeTool | null> {
+  try {
+    const toolsCollection = collection(db, "creative-tools");
+    const querySnapshot = await getDocs(toolsCollection);
+    
+    const doc = querySnapshot.docs.find(doc => doc.id === id);
+    
+    if (doc) {
+      return {
+        id: doc.id,
+        ...doc.data()
+      } as CreativeTool;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Error obteniendo herramienta:", error);
+    return null;
   }
 }
 

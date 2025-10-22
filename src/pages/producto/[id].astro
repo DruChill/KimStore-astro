@@ -1,54 +1,26 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getToolById, getCreativeTools } from '../../lib/firestore';
-import productsData from '../../data/products.json';
 import { Clock, Monitor, Cpu, ShoppingCart, Languages, ShieldCheck, ShoppingBasket } from 'lucide-astro';
 
-// Generar rutas estáticas para todos los productos (estáticos + Firestore)
+// Generar rutas estáticas para todos los productos desde Firestore
 export async function getStaticPaths() {
-  const staticPaths = productsData.map(product => ({
-    params: { id: product.id }
-  }));
-
   try {
-    // Intentar obtener productos de Firestore también
     const firestoreProducts = await getCreativeTools();
-    const firestorePaths = firestoreProducts.map(product => ({
+    return firestoreProducts.map(product => ({
       params: { id: product.id }
     }));
-    
-    // Combinar ambos, evitando duplicados
-    const allPaths = [...staticPaths];
-    firestorePaths.forEach(path => {
-      if (!allPaths.some(p => p.params.id === path.params.id)) {
-        allPaths.push(path);
-      }
-    });
-    
-    return allPaths;
   } catch (error) {
-    console.log("Error obteniendo productos de Firestore, usando solo estáticos");
-    return staticPaths;
+    console.error("Error obteniendo productos de Firestore:", error);
+    return [];
   }
 }
 
 // Obtener el ID del producto desde la URL
 const { id } = Astro.params;
 
-// Intentar obtener desde Firestore primero, luego fallback a datos estáticos
-let tool = productsData.find(p => p.id === id);
-
-try {
-  const firestoreTool = await getToolById(id || '');
-  if (firestoreTool) {
-    tool = {
-      ...firestoreTool,
-      lastUpdated: firestoreTool.lastUpdated ? new Date(firestoreTool.lastUpdated) : undefined
-    } as any;
-  }
-} catch (error) {
-  console.log("Usando datos estáticos para el producto");
-}
+// Obtener producto desde Firestore
+const tool = await getToolById(id || '');
 
 // Si no se encuentra el producto, mostrar 404
 if (!tool) {
@@ -56,10 +28,9 @@ if (!tool) {
 }
 
 // Función para formatear fecha
-const formatDate = (dateString?: string) => {
-  if (!dateString) return 'Fecha no disponible';
+const formatDate = (date?: Date) => {
+  if (!date) return 'Fecha no disponible';
   try {
-    const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',
@@ -70,11 +41,11 @@ const formatDate = (dateString?: string) => {
   }
 };
 
-// Valores por defecto para datos estáticos
+// Valores por defecto si faltan en Firestore
 const status = tool.status || '100% Funcional';
 const tags = tool.tags || ['Diseño', 'Herramienta', 'Profesional'];
 const videoUrl = tool.videoUrl || 'https://www.youtube.com/embed/k_TfGHam5r0?si=JRsVxI4Y2QR52Msp';
-const lastUpdated = tool.lastUpdated || new Date().toISOString();
+const lastUpdated = tool.lastUpdated;
 ---
 
 <Layout title={`${tool.name} - KimYuna Store`} currentPath={`/producto/${id}`}>

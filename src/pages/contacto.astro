@@ -190,7 +190,7 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 
 <script>
 	// Llenar formulario con parámetros de URL del lado del cliente
-	document.addEventListener('DOMContentLoaded', () => {
+	function fillFormFromURL() {
 		const urlParams = new URLSearchParams(window.location.search);
 		
 		const subject = urlParams.get('subject');
@@ -198,6 +198,7 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 		const message = urlParams.get('message');
 
 		// Llenar los campos si hay valores en la URL
+		// URLSearchParams.get() ya decodifica automáticamente, no necesitamos decodeURIComponent
 		if (subject) {
 			const subjectInput = document.getElementById('subject') as HTMLInputElement;
 			if (subjectInput) subjectInput.value = subject;
@@ -212,5 +213,11 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 			const messageTextarea = document.getElementById('message') as HTMLTextAreaElement;
 			if (messageTextarea) messageTextarea.value = message;
 		}
-	});
+	}
+
+	// Ejecutar al cargar la página
+	fillFormFromURL();
+
+	// También ejecutar después de navegaciones con View Transitions
+	document.addEventListener('astro:page-load', fillFormFromURL);
 </script>

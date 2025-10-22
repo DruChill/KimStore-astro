@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
 import Header from '../components/Header.astro';
+import Clarity from '../components/Clarity.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -20,6 +21,7 @@ const { title = "KimYuna Store", currentPath = Astro.url.pathname } = Astro.prop
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<ViewTransitions />
+		<Clarity />
 	</head>
 	<body class="bg-neutral-900 text-white">
 		<Header currentPath={currentPath} />

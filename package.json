@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@microsoft/clarity": "^1.0.0",
     "@tailwindcss/vite": "^4.1.15",
     "astro": "^5.14.8",
     "firebase": "^12.4.0",

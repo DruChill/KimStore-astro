@@ -1,17 +1,5 @@
 ---
-import Card from './Card.astro';
 import '../styles/global.css';
-
-// Datos de ejemplo para las tarjetas
-const products = [
-	{
-		name: "Final Cut Pro",
-		price: 299,
-		description: "Editor de video profesional para Mac. Crea contenido cinematográfico con herramientas avanzadas de edición.",
-		ico: "finalcut",
-		id: "finalcut-pro"
-	}
-];
 ---
 
 <div class="bg-neutral-900 text-white">
@@ -21,21 +9,6 @@ const products = [
 			<p class="text-lg mb-8">
 				 Descubre una experiencia de compra única con productos seleccionados especialmente para ti.
 			</p>
-		</div>
-		
-		<!-- Sección de productos destacados -->
-		<div class="mb-12">
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-				{products.map(product => (
-					<Card 
-						name={product.name}
-						price={product.price}
-						description={product.description}
-						ico={product.ico}
-						id={product.id}
-					/>
-				))}
-			</div>
 		</div>
 	</div>
 </div>

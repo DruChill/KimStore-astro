@@ -12,6 +12,7 @@
     "@tailwindcss/vite": "^4.1.15",
     "astro": "^5.14.8",
     "firebase": "^12.4.0",
+    "lucide-astro": "^0.546.0",
     "tailwindcss": "^4.1.15"
   }
 }

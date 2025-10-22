@@ -87,43 +87,107 @@ const lastUpdated = tool.lastUpdated;
                 </h1>
               </div>
 
-              <div class="flex items-center gap-4">
-                <span class="bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full px-6 py-3 text-lg font-semibold inline-block">
-                  ${tool.price.toFixed(2)} USD
-                </span>
-
-                <div class="flex items-center gap-2 text-neutral-400 text-sm">
-                  <Clock class="h-4 w-4" />
-                  <span>{formatDate(lastUpdated)}</span>
-                </div>
+              <div class="flex items-center gap-2 text-neutral-400 text-sm">
+                <Clock class="h-4 w-4" />
+                <span>{formatDate(lastUpdated)}</span>
               </div>
 
-              <p class="text-neutral-300 text-lg leading-relaxed">
-                {tool.description}
-              </p>
+              <!-- Opciones de Compra -->
+              <div class="space-y-3">
+                <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wide">Selecciona una opción</h3>
+                
+                <!-- Opción 1: Instalación Remota -->
+                <label class="block border border-neutral-700 rounded-lg p-4 hover:border-blue-500 transition-colors cursor-pointer has-[:checked]:border-blue-500 has-[:checked]:bg-blue-500/5">
+                  <div class="flex items-start gap-3">
+                    <input 
+                      type="radio" 
+                      name="installOption" 
+                      value="remote"
+                      class="mt-1 w-4 h-4 text-blue-600 bg-neutral-800 border-neutral-600 focus:ring-blue-500"
+                    />
+                    <div class="flex-1">
+                      <div class="flex items-start justify-between mb-2">
+                        <div>
+                          <h4 class="text-white font-semibold">Instalación Remota</h4>
+                          <p class="text-2xl font-bold text-blue-400 mt-1">$25 USD</p>
+                        </div>
+                      </div>
+                      <p class="text-sm text-neutral-400 mb-2">
+                        Instalación completa mediante asistencia remota. Sin entrega de archivos.
+                      </p>
+                      <div class="space-y-1.5 mb-2">
+                        <p class="text-xs font-semibold text-green-400">✓ Ventajas:</p>
+                        <ul class="text-xs text-neutral-400 space-y-1 ml-4">
+                          <li>• Instalación rápida y sin complicaciones</li>
+                          <li>• Acompañamiento durante todo el proceso</li>
+                        </ul>
+                      </div>
+                      <p class="text-xs text-yellow-400/80">⚠ Requiere: Conexión estable y disponibilidad del cliente</p>
+                    </div>
+                  </div>
+                </label>
+
+                <!-- Opción 2: Archivos + Manual -->
+                <label class="block border border-neutral-700 rounded-lg p-4 hover:border-blue-500 transition-colors cursor-pointer has-[:checked]:border-blue-500 has-[:checked]:bg-blue-500/5">
+                  <div class="flex items-start gap-3">
+                    <input 
+                      type="radio" 
+                      name="installOption" 
+                      value="files"
+                      checked
+                      class="mt-1 w-4 h-4 text-blue-600 bg-neutral-800 border-neutral-600 focus:ring-blue-500"
+                    />
+                    <div class="flex-1">
+                      <div class="flex items-start justify-between mb-2">
+                        <div>
+                          <h4 class="text-white font-semibold">Archivos + Manual</h4>
+                          <p class="text-2xl font-bold text-blue-400 mt-1">${tool.price.toFixed(2)} USD</p>
+                        </div>
+                      </div>
+                      <p class="text-sm text-neutral-400 mb-2">
+                        Archivos completos de instalación con instrucciones paso a paso.
+                      </p>
+                      <div class="space-y-1.5 mb-2">
+                        <p class="text-xs font-semibold text-green-400">✓ Ventajas:</p>
+                        <ul class="text-xs text-neutral-400 space-y-1 ml-4">
+                          <li>• Conservas los instaladores para uso futuro</li>
+                          <li>• Flexibilidad para instalar cuando quieras</li>
+                        </ul>
+                      </div>
+                      <p class="text-xs text-yellow-400/80">⚠ Nota: Instalación bajo tu responsabilidad</p>
+                    </div>
+                  </div>
+                </label>
+              </div>
             </div>
 
             <hr class="border-neutral-700" />
           </div>
 
           <!-- Purchase Section -->
-          <div class="space-y-6">
-            <div>
-              {tool.linkPayment ? (
+          <div class="space-y-4">
+            {tool.linkPayment ? (
+              <>
                 <a 
                   href={tool.linkPayment} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   class="block w-full"
+                  id="buyButton"
                 >
                   <button
                     class="w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2"
                   >
                     <ShoppingCart class="h-5 w-5" />
-                    Comprar Ahora
+                    <span id="buttonText">Comprar Ahora</span>
                   </button>
                 </a>
-              ) : (
+                <div class="text-center text-xs text-neutral-400" id="disclaimerText">
+                  No ofrecemos devoluciones, así que asegúrate de revisar bien los requisitos.
+                </div>
+              </>
+            ) : (
+              <>
                 <button
                   disabled
                   class="w-full h-14 text-lg font-semibold bg-neutral-600 text-neutral-300 border-0 rounded-full cursor-not-allowed flex items-center justify-center gap-2"
@@ -131,14 +195,11 @@ const lastUpdated = tool.lastUpdated;
                   <Clock class="h-5 w-5" />
                   Próximamente
                 </button>
-              )}
-              <div class="mt-2 text-center text-xs text-neutral-400">
-                {tool.linkPayment 
-                  ? "No ofrecemos devoluciones, así que asegúrate de instalar primero la app."
-                  : "Estamos migrando este producto. Pronto estará disponible."
-                }
-              </div>
-            </div>
+                <div class="text-center text-xs text-neutral-400">
+                  Estamos migrando este producto. Pronto estará disponible.
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -232,10 +293,51 @@ const lastUpdated = tool.lastUpdated;
         </div>
         
         <!-- Nota sobre futuras características -->
-        <div class="mt-8 text-center text-neutral-500 text-sm">
+        <!-- <div class="mt-8 text-center text-neutral-500 text-sm">
           <p>💡 Próximamente: Sistema de reseñas y cupones de descuento para compradores</p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </Layout>
+
+<script>
+  // Manejar cambio de opciones
+  const radioButtons = document.querySelectorAll('input[name="installOption"]');
+  const buyButton = document.getElementById('buyButton') as HTMLAnchorElement;
+  const buttonText = document.getElementById('buttonText');
+  const disclaimerText = document.getElementById('disclaimerText');
+
+  if (radioButtons && buyButton && buttonText && disclaimerText) {
+    radioButtons.forEach((radio) => {
+      radio.addEventListener('change', (e) => {
+        const target = e.target as HTMLInputElement;
+        
+        if (target.value === 'remote') {
+          // Opción 1: Instalación Remota - Ir a contacto
+          const productName = document.querySelector('h1')?.textContent || 'Producto';
+          const subject = encodeURIComponent(`Instalación Remota - ${productName}`);
+          const category = encodeURIComponent('soporte');
+          const message = encodeURIComponent(`Hola, estoy interesado en el servicio de Instalación Remota para ${productName}.\n\nPor favor, indíquenme los próximos pasos para agendar la instalación.\n\nGracias.`);
+          
+          buyButton.href = `/contacto?subject=${subject}&category=${category}&message=${message}`;
+          buyButton.target = '_self';
+          buttonText.textContent = 'Reservar Instalación';
+          disclaimerText.textContent = 'Serás redirigido al formulario de contacto para coordinar la instalación.';
+        } else {
+          // Opción 2: Archivos + Manual - Comprar
+          const paymentLink = buyButton.dataset.originalHref || buyButton.href;
+          buyButton.href = paymentLink;
+          buyButton.target = '_blank';
+          buttonText.textContent = 'Comprar Ahora';
+          disclaimerText.textContent = 'No ofrecemos devoluciones, así que asegúrate de revisar bien los requisitos.';
+        }
+      });
+    });
+
+    // Guardar el link original de pago
+    if (buyButton.href && !buyButton.dataset.originalHref) {
+      buyButton.dataset.originalHref = buyButton.href;
+    }
+  }
+</script>

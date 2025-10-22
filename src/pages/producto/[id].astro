@@ -123,41 +123,26 @@ const lastUpdated = tool.lastUpdated;
 
           <!-- Purchase Section -->
           <div class="space-y-4">
-            {tool.linkPayment ? (
-              <>
-                <a 
-                  href={tool.linkPayment} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="block w-full"
-                  id="buyButton"
-                >
-                  <button
-                    class="w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2"
-                  >
-                    <ShoppingCart class="h-5 w-5" id="buttonIcon" />
-                    <Calendar class="h-5 w-5 hidden" id="calendarIcon" />
-                    <span id="buttonText">Comprar Ahora</span>
-                  </button>
-                </a>
-                <div class="text-center text-xs text-neutral-400" id="disclaimerText">
-                  No ofrecemos devoluciones, así que asegúrate de instalar primero la app.
-                </div>
-              </>
-            ) : (
-              <>
-                <button
-                  disabled
-                  class="w-full h-14 text-lg font-semibold bg-neutral-600 text-neutral-300 border-0 rounded-full cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  <Clock class="h-5 w-5" />
-                  Próximamente
-                </button>
-                <div class="text-center text-xs text-neutral-400">
-                  Estamos migrando este producto. Pronto estará disponible.
-                </div>
-              </>
-            )}
+            <a 
+              href={tool.linkPayment || '#'} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="block w-full"
+              id="buyButton"
+            >
+              <button
+                id="mainButton"
+                class="w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2"
+              >
+                <ShoppingCart class="h-5 w-5" id="buttonIcon" />
+                <Calendar class="h-5 w-5 hidden" id="calendarIcon" />
+                <Clock class="h-5 w-5 hidden" id="clockIcon" />
+                <span id="buttonText">Comprar Ahora</span>
+              </button>
+            </a>
+            <div class="text-center text-xs text-neutral-400" id="disclaimerText">
+              No ofrecemos devoluciones, así que asegúrate de revisar bien los requisitos.
+            </div>
           </div>
         </div>
       </div>
@@ -283,17 +268,20 @@ const lastUpdated = tool.lastUpdated;
   // Elementos del DOM
   const optionTabs = document.querySelectorAll('.option-tab');
   const buyButton = document.getElementById('buyButton') as HTMLAnchorElement;
+  const mainButton = document.getElementById('mainButton') as HTMLButtonElement;
   const buttonText = document.getElementById('buttonText');
   const disclaimerText = document.getElementById('disclaimerText');
   const cartIcon = document.getElementById('buttonIcon');
   const calendarIcon = document.getElementById('calendarIcon');
+  const clockIcon = document.getElementById('clockIcon');
   const priceDisplay = document.getElementById('priceDisplay');
   const optionDescription = document.getElementById('optionDescription');
 
   let currentOption = 'files';
 
   // Guardar link original de pago
-  if (buyButton && buyButton.href && !buyButton.dataset.originalHref) {
+  const hasPaymentLink = buyButton && buyButton.href && buyButton.href !== '#' && !buyButton.href.endsWith('#');
+  if (hasPaymentLink && buyButton && !buyButton.dataset.originalHref) {
     buyButton.dataset.originalHref = buyButton.href;
   }
 
@@ -338,19 +326,48 @@ const lastUpdated = tool.lastUpdated;
     }
 
     // Actualizar iconos
-    if (cartIcon && calendarIcon) {
+    if (cartIcon && calendarIcon && clockIcon) {
+      cartIcon.classList.add('hidden');
+      calendarIcon.classList.add('hidden');
+      clockIcon.classList.add('hidden');
+      
       if (config.buttonIcon === 'cart') {
         cartIcon.classList.remove('hidden');
-        calendarIcon.classList.add('hidden');
-      } else {
-        cartIcon.classList.add('hidden');
+      } else if (config.buttonIcon === 'calendar') {
         calendarIcon.classList.remove('hidden');
+      } else {
+        clockIcon.classList.remove('hidden');
+      }
+    }
+
+    // Actualizar estado del botón según disponibilidad
+    if (mainButton && buyButton) {
+      // Si es "Archivos + Manual" Y no hay link de pago → Deshabilitar
+      if (option === 'files' && !hasPaymentLink) {
+        mainButton.disabled = true;
+        mainButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'hover:scale-[1.02]');
+        mainButton.classList.add('bg-neutral-600', 'text-neutral-300', 'cursor-not-allowed');
+        if (buttonText) buttonText.textContent = 'Próximamente';
+        if (clockIcon) clockIcon.classList.remove('hidden');
+        if (cartIcon) cartIcon.classList.add('hidden');
+        if (disclaimerText) {
+          disclaimerText.textContent = 'Estamos migrando este producto. Pronto estará disponible.';
+        }
+        buyButton.style.pointerEvents = 'none';
+        return; // Salir temprano
+      } else {
+        // Habilitar botón
+        mainButton.disabled = false;
+        mainButton.classList.add('bg-blue-600', 'hover:bg-blue-700', 'hover:scale-[1.02]');
+        mainButton.classList.remove('bg-neutral-600', 'text-neutral-300', 'cursor-not-allowed');
+        buyButton.style.pointerEvents = 'auto';
       }
     }
 
     // Actualizar link
     if (buyButton) {
       if (config.linkType === 'contact') {
+        // Instalación Remota → Siempre disponible
         const productName = document.querySelector('h1')?.textContent || 'Producto';
         const subject = encodeURIComponent(`Instalación Remota - ${productName}`);
         const category = encodeURIComponent('soporte');
@@ -358,8 +375,9 @@ const lastUpdated = tool.lastUpdated;
         
         buyButton.href = `/contacto?subject=${subject}&category=${category}&message=${message}`;
         buyButton.target = '_self';
-      } else {
-        buyButton.href = buyButton.dataset.originalHref || buyButton.href;
+      } else if (hasPaymentLink) {
+        // Archivos + Manual con link de pago disponible
+        buyButton.href = buyButton.dataset.originalHref || '#';
         buyButton.target = '_blank';
       }
     }

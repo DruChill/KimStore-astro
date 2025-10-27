@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getToolById, getCreativeTools } from '../../lib/firestore';
-import { Clock, Monitor, Cpu, ShoppingCart, Languages, ShieldCheck, ShoppingBasket, Calendar } from 'lucide-astro';
+import { Clock, Monitor, Cpu, ShoppingCart, Languages, ShieldCheck, ShoppingBasket, Calendar, MoveLeft } from 'lucide-astro';
 
 // Generar rutas estáticas para todos los productos desde Firestore
 export async function getStaticPaths() {
@@ -95,7 +95,7 @@ const lastUpdated = tool.lastUpdated;
                     data-option="files"
                     class="option-tab flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200 bg-blue-600 text-white"
                   >
-                    Archivos + Manual
+                    <MoveLeft class="h-5 w-5 lg:inline-block hidden" /> Video Tutorial + Archivos
                   </button>
                   <button 
                     data-option="remote"
@@ -113,7 +113,7 @@ const lastUpdated = tool.lastUpdated;
 
                 <!-- Descripción de la opción seleccionada -->
                 <div id="optionDescription" class="text-sm text-neutral-400">
-                  Archivos completos de instalación con instrucciones paso a paso. Conservas los instaladores para uso futuro.
+                  Descarga directa + video tutorial paso a paso. Incluye archivos de instalación y conservas los instaladores para uso futuro.
                 </div>
               </div>
             </div>
@@ -246,11 +246,14 @@ const lastUpdated = tool.lastUpdated;
 
 <script>
   function initProductPage() {
-    // Configuración de opciones
+    // Configuración simplificada de opciones
+    const productPrice = parseFloat(document.getElementById('priceDisplay')?.textContent?.replace('$', '') || '40');
+    const productName = document.querySelector('h1')?.textContent || 'Producto';
+    
     const options = {
       files: {
-        price: parseFloat(document.querySelector('h1')?.textContent || '40'), // Obtener precio del producto
-        description: 'Archivos completos de instalación con instrucciones paso a paso. Conservas los instaladores para uso futuro.',
+        price: productPrice,
+        description: 'Obtendrás los siguientes archivos: archivos de instalación. Conserva los instaladores para uso futuro.',
         buttonText: 'Comprar Ahora',
         buttonIcon: 'cart',
         disclaimer: 'No ofrecemos devoluciones, así que asegúrate de revisar bien los requisitos.',
@@ -258,7 +261,7 @@ const lastUpdated = tool.lastUpdated;
       },
       remote: {
         price: 15.99,
-        description: 'Instalación completa mediante asistencia remota. Sin entrega de archivos. Instalación rápida con acompañamiento durante todo el proceso.',
+        description: 'Instalación completa por nuestro equipo vía AnyDesk. Sin archivos, solo instalación profesional con acompañamiento.',
         buttonText: 'Reservar Instalación',
         buttonIcon: 'calendar',
         disclaimer: 'Serás redirigido al formulario de contacto para coordinar la instalación.',
@@ -266,140 +269,125 @@ const lastUpdated = tool.lastUpdated;
       }
     };
 
-    // Elementos del DOM
-    const optionTabs = document.querySelectorAll('.option-tab');
-    const buyButton = document.getElementById('buyButton') as HTMLAnchorElement;
-    const mainButton = document.getElementById('mainButton') as HTMLButtonElement;
-    const buttonText = document.getElementById('buttonText');
-    const disclaimerText = document.getElementById('disclaimerText');
-    const cartIcon = document.getElementById('buttonIcon');
-    const calendarIcon = document.getElementById('calendarIcon');
-    const clockIcon = document.getElementById('clockIcon');
-    const priceDisplay = document.getElementById('priceDisplay');
-    const optionDescription = document.getElementById('optionDescription');
+    // Elementos del DOM con casting correcto
+    const elements = {
+      tabs: document.querySelectorAll('.option-tab'),
+      buyButton: document.getElementById('buyButton') as HTMLAnchorElement,
+      mainButton: document.getElementById('mainButton') as HTMLButtonElement,
+      buttonText: document.getElementById('buttonText'),
+      disclaimerText: document.getElementById('disclaimerText'),
+      cartIcon: document.getElementById('buttonIcon'),
+      calendarIcon: document.getElementById('calendarIcon'),
+      clockIcon: document.getElementById('clockIcon'),
+      priceDisplay: document.getElementById('priceDisplay'),
+      optionDescription: document.getElementById('optionDescription')
+    };
 
-    let currentOption = 'files';
-
-    // Guardar link original de pago
-    const hasPaymentLink = buyButton && buyButton.href && buyButton.href !== '#' && !buyButton.href.endsWith('#');
-    if (hasPaymentLink && buyButton && !buyButton.dataset.originalHref) {
-      buyButton.dataset.originalHref = buyButton.href;
+    // Verificar si hay link de pago válido
+    const hasPaymentLink = elements.buyButton?.href && 
+                          !elements.buyButton.href.endsWith('#') && 
+                          elements.buyButton.href !== window.location.href;
+    
+    // Guardar link original solo una vez
+    if (hasPaymentLink && elements.buyButton && !elements.buyButton.dataset.originalHref) {
+      elements.buyButton.dataset.originalHref = elements.buyButton.href;
     }
 
-    // Obtener precio real del producto desde el data attribute o calcular
-    const realPrice = parseFloat(priceDisplay?.textContent?.replace('$', '') || '40');
-    options.files.price = realPrice;
+    // Función para alternar iconos
+    function toggleIcons(activeIcon: string) {
+      const icons = [elements.cartIcon, elements.calendarIcon, elements.clockIcon];
+      icons.forEach(icon => icon?.classList.add('hidden'));
+      
+      if (activeIcon === 'cartIcon' && elements.cartIcon) {
+        elements.cartIcon.classList.remove('hidden');
+      } else if (activeIcon === 'calendarIcon' && elements.calendarIcon) {
+        elements.calendarIcon.classList.remove('hidden');
+      } else if (activeIcon === 'clockIcon' && elements.clockIcon) {
+        elements.clockIcon.classList.remove('hidden');
+      }
+    }
 
-    // Función para actualizar UI
+    // Función para alternar tabs
+    function toggleTabs(activeOption: string) {
+      elements.tabs.forEach(tab => {
+        const button = tab as HTMLButtonElement;
+        const isActive = button.dataset.option === activeOption;
+        button.classList.toggle('bg-blue-600', isActive);
+        button.classList.toggle('text-white', isActive);
+        button.classList.toggle('text-neutral-400', !isActive);
+        button.classList.toggle('hover:text-white', !isActive);
+      });
+    }
+
+    // Función para actualizar estado del botón
+    function updateButtonState(option: string, config: typeof options.files) {
+      if (!elements.mainButton || !elements.buttonText || !elements.disclaimerText || !elements.buyButton) return;
+
+      if (option === 'files' && !hasPaymentLink) {
+        // Producto no disponible
+        elements.mainButton.disabled = true;
+        elements.mainButton.className = 'w-full h-14 text-lg font-semibold bg-neutral-600 text-neutral-300 cursor-not-allowed border-0 rounded-full flex items-center justify-center gap-2';
+        elements.buttonText.textContent = 'Próximamente';
+        elements.disclaimerText.textContent = 'Estamos migrando este producto. Pronto estará disponible.';
+        elements.buyButton.style.pointerEvents = 'none';
+        toggleIcons('clockIcon');
+      } else {
+        // Producto disponible
+        elements.mainButton.disabled = false;
+        elements.mainButton.className = 'w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2';
+        elements.buttonText.textContent = config.buttonText;
+        elements.disclaimerText.textContent = config.disclaimer;
+        elements.buyButton.style.pointerEvents = 'auto';
+        toggleIcons(config.buttonIcon === 'cart' ? 'cartIcon' : 'calendarIcon');
+      }
+    }
+
+    // Función para actualizar link
+    function updateLink(config: typeof options.files) {
+      if (!elements.buyButton) return;
+
+      if (config.linkType === 'contact') {
+        const params = new URLSearchParams({
+          subject: `Instalación Remota - ${productName}`,
+          category: 'soporte',
+          message: `Hola, estoy interesado en el servicio de Instalación Remota para ${productName}.\n\nPor favor, indíquenme los próximos pasos para agendar la instalación.\n\nGracias.`
+        });
+        elements.buyButton.href = `/contacto?${params}`;
+        elements.buyButton.target = '_self';
+      } else if (hasPaymentLink) {
+        elements.buyButton.href = elements.buyButton.dataset.originalHref || '#';
+        elements.buyButton.target = '_blank';
+      }
+    }
+
+    // Función principal para actualizar UI
     function updateUI(option: 'files' | 'remote') {
       const config = options[option];
       
-      // Actualizar tabs
-      optionTabs.forEach(tab => {
-        const tabOption = (tab as HTMLButtonElement).dataset.option;
-        if (tabOption === option) {
-          tab.classList.add('bg-blue-600', 'text-white');
-          tab.classList.remove('text-neutral-400', 'hover:text-white');
-        } else {
-          tab.classList.remove('bg-blue-600', 'text-white');
-          tab.classList.add('text-neutral-400', 'hover:text-white');
-        }
-      });
-
-      // Actualizar precio
-      if (priceDisplay) {
-        priceDisplay.textContent = `$${config.price.toFixed(2)}`;
-      }
-
-      // Actualizar descripción
-      if (optionDescription) {
-        optionDescription.textContent = config.description;
-      }
-
-      // Actualizar botón
-      if (buttonText) {
-        buttonText.textContent = config.buttonText;
-      }
-
-      // Actualizar disclaimer
-      if (disclaimerText) {
-        disclaimerText.textContent = config.disclaimer;
-      }
-
-      // Actualizar iconos
-      if (cartIcon && calendarIcon && clockIcon) {
-        cartIcon.classList.add('hidden');
-        calendarIcon.classList.add('hidden');
-        clockIcon.classList.add('hidden');
-        
-        if (config.buttonIcon === 'cart') {
-          cartIcon.classList.remove('hidden');
-        } else if (config.buttonIcon === 'calendar') {
-          calendarIcon.classList.remove('hidden');
-        } else {
-          clockIcon.classList.remove('hidden');
-        }
-      }
-
-      // Actualizar estado del botón según disponibilidad
-      if (mainButton && buyButton) {
-        // Si es "Archivos + Manual" Y no hay link de pago → Deshabilitar
-        if (option === 'files' && !hasPaymentLink) {
-          mainButton.disabled = true;
-          mainButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'hover:scale-[1.02]');
-          mainButton.classList.add('bg-neutral-600', 'text-neutral-300', 'cursor-not-allowed');
-          if (buttonText) buttonText.textContent = 'Próximamente';
-          if (clockIcon) clockIcon.classList.remove('hidden');
-          if (cartIcon) cartIcon.classList.add('hidden');
-          if (disclaimerText) {
-            disclaimerText.textContent = 'Estamos migrando este producto. Pronto estará disponible.';
-          }
-          buyButton.style.pointerEvents = 'none';
-          return; // Salir temprano
-        } else {
-          // Habilitar botón
-          mainButton.disabled = false;
-          mainButton.classList.add('bg-blue-600', 'hover:bg-blue-700', 'hover:scale-[1.02]');
-          mainButton.classList.remove('bg-neutral-600', 'text-neutral-300', 'cursor-not-allowed');
-          buyButton.style.pointerEvents = 'auto';
-        }
-      }
-
-      // Actualizar link
-      if (buyButton) {
-        if (config.linkType === 'contact') {
-          // Instalación Remota → Siempre disponible
-          const productName = document.querySelector('h1')?.textContent || 'Producto';
-          const subject = encodeURIComponent(`Instalación Remota - ${productName}`);
-          const category = encodeURIComponent('soporte');
-          const message = encodeURIComponent(`Hola, estoy interesado en el servicio de Instalación Remota para ${productName}.\n\nPor favor, indíquenme los próximos pasos para agendar la instalación.\n\nGracias.`);
-          
-          buyButton.href = `/contacto?subject=${subject}&category=${category}&message=${message}`;
-          buyButton.target = '_self';
-        } else if (hasPaymentLink) {
-          // Archivos + Manual con link de pago disponible
-          buyButton.href = buyButton.dataset.originalHref || '#';
-          buyButton.target = '_blank';
-        }
-      }
+      if (!elements.priceDisplay || !elements.optionDescription) return;
+      
+      // Actualizar elementos de forma eficiente
+      toggleTabs(option);
+      elements.priceDisplay.textContent = `$${config.price.toFixed(2)}`;
+      elements.optionDescription.textContent = config.description;
+      updateButtonState(option, config);
+      updateLink(config);
     }
 
     // Event listeners para tabs
-    optionTabs.forEach(tab => {
+    elements.tabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        const option = (tab as HTMLButtonElement).dataset.option as 'files' | 'remote';
-        currentOption = option;
-        updateUI(option);
+        const button = tab as HTMLButtonElement;
+        const option = button.dataset.option as 'files' | 'remote';
+        if (option) updateUI(option);
       });
     });
 
-    // Inicializar con la opción por defecto
+    // Inicializar con opción por defecto
     updateUI('files');
   }
 
-  // Ejecutar al cargar la página
+  // Ejecutar en carga inicial y después de navegaciones
   initProductPage();
-
-  // También ejecutar después de navegaciones con View Transitions
   document.addEventListener('astro:page-load', initProductPage);
 </script>

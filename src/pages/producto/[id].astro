@@ -1,14 +1,24 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getToolById, getCreativeTools } from '../../lib/firestore';
-import { Clock, Monitor, Cpu, ShoppingCart, Languages, ShieldCheck, ShoppingBasket, Calendar, MoveLeft } from 'lucide-astro';
+import Layout from "../../layouts/Layout.astro";
+import { getToolById, getCreativeTools } from "../../lib/firestore";
+import {
+  Clock,
+  Monitor,
+  Cpu,
+  ShoppingCart,
+  Languages,
+  ShieldCheck,
+  ShoppingBasket,
+  Calendar,
+  MoveLeft,
+} from "lucide-astro";
 
 // Generar rutas estáticas para todos los productos desde Firestore
 export async function getStaticPaths() {
   try {
     const firestoreProducts = await getCreativeTools();
-    return firestoreProducts.map(product => ({
-      params: { id: product.id }
+    return firestoreProducts.map((product) => ({
+      params: { id: product.id },
     }));
   } catch (error) {
     console.error("Error obteniendo productos de Firestore:", error);
@@ -20,11 +30,11 @@ export async function getStaticPaths() {
 const { id } = Astro.params;
 
 // Obtener producto desde Firestore
-const tool = await getToolById(id || '');
+const tool = await getToolById(id || "");
 
 // Si no se encuentra el producto, mostrar 404
 if (!tool) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 
 // Verificar si tenemos datos completos para mostrar el video
@@ -33,56 +43,76 @@ const shouldShowPlaceholder = !tool.videoId || !tool.videoId.trim();
 
 // Función para formatear fecha
 const formatDate = (date?: Date) => {
-  if (!date) return 'Fecha no disponible';
+  if (!date) return "Fecha no disponible";
   try {
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return date.toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   } catch {
-    return 'Fecha no disponible';
+    return "Fecha no disponible";
   }
 };
 
 // Valores por defecto si faltan en Firestore
-const status = tool.status || '100% Funcional';
-const tags = tool.tags || ['Diseño', 'Herramienta', 'Profesional'];
+const status = tool.status || "100% Funcional";
+const tags = tool.tags || ["Diseño", "Herramienta", "Profesional"];
 const lastUpdated = tool.lastUpdated;
-const displayName = tool.name || 'Producto sin nombre';
+const displayName = tool.name || "Producto sin nombre";
 const displayPrice = tool.price || 0;
-const displayIcon = tool.ico || 'placeholder';
-const displayLinkPayment = tool.linkPayment || '#';
+const displayIcon = tool.ico || "placeholder";
+const displayLinkPayment = tool.linkPayment || "#";
 ---
 
-<Layout title={`${displayName} - KimYuna Store`} currentPath={`/producto/${id}`}>
+<Layout
+  title={`${displayName} - KimYuna Store`}
+  currentPath={`/producto/${id}`}
+>
   <div class="bg-black text-white min-h-screen">
     <!-- Main Tool Layout -->
     <div class="px-4 sm:px-6 lg:px-12 py-8 lg:py-16">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 max-w-7xl mx-auto">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 max-w-7xl mx-auto"
+      >
         <!-- Left Side - Tool Video -->
         <div class="w-full">
           <!-- Video Tutorial Title -->
           <div class="mb-4">
+            <button
+              onclick="history.back()"
+              class="group flex items-center gap-2 text-neutral-400 hover:text-white transition-colors duration-200 mb-8"
+            >
+              <MoveLeft
+                class="h-5 w-5 transition-transform duration-200 group-hover:-translate-x-1"
+              />
+              <span class="text-sm font-medium">Regresar</span>
+            </button>
             <p class="text-neutral-400 text-sm">
-              {shouldShowPlaceholder 
-                ? 'Contenido en preparación' 
-                : `Guía paso a paso para la instalación de ${displayName}`}
+              {
+                shouldShowPlaceholder
+                  ? "Contenido en preparación"
+                  : `Guía paso a paso para la instalación de ${displayName}`
+              }
             </p>
           </div>
-          
-          <div class="relative w-full aspect-video bg-neutral-900 rounded-2xl overflow-hidden border border-neutral-800">
-            {shouldShowPlaceholder ? (
-              <div class="w-full h-full flex items-center justify-center bg-neutral-800">
-                <img 
-                  src="/placeholder.svg" 
-                  alt="Contenido en preparación" 
-                  class="w-full"
-                />
-              </div>
-            ) : (
-              <lite-youtube videoid={tool.videoId}></lite-youtube>
-            )}
+
+          <div
+            class="relative w-full aspect-video bg-neutral-900 rounded-2xl overflow-hidden border border-neutral-800"
+          >
+            {
+              shouldShowPlaceholder ? (
+                <div class="w-full h-full flex items-center justify-center bg-neutral-800">
+                  <img
+                    src="/placeholder.svg"
+                    alt="Contenido en preparación"
+                    class="w-full"
+                  />
+                </div>
+              ) : (
+                <lite-youtube videoid={tool.videoId} />
+              )
+            }
           </div>
         </div>
 
@@ -101,7 +131,9 @@ const displayLinkPayment = tool.linkPayment || '#';
                   transition:name={`product-icon-${id}`}
                   transition:animate="fade"
                 />
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
+                <h1
+                  class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight"
+                >
                   {displayName}
                 </h1>
               </div>
@@ -109,14 +141,16 @@ const displayLinkPayment = tool.linkPayment || '#';
               <!-- Opciones de Compra - Tabs Style -->
               <div class="space-y-4">
                 <!-- Tabs de opciones -->
-                <div class="flex gap-2 p-1 bg-neutral-800/50 rounded-lg border border-neutral-700">
-                  <button 
+                <div
+                  class="flex gap-2 p-1 bg-neutral-800/50 rounded-lg border border-neutral-700"
+                >
+                  <button
                     data-option="files"
                     class="option-tab flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200 bg-blue-600 text-white"
                   >
-                  Archivos + Instrucciones
+                    Archivos + Instrucciones
                   </button>
-                  <button 
+                  <button
                     data-option="remote"
                     class="option-tab flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200 text-neutral-400 hover:text-white"
                   >
@@ -126,13 +160,17 @@ const displayLinkPayment = tool.linkPayment || '#';
 
                 <!-- Precio dinámico -->
                 <div class="flex items-baseline gap-2">
-                  <span class="text-4xl font-bold text-white" id="priceDisplay">${displayPrice.toFixed(2)}</span>
+                  <span class="text-4xl font-bold text-white" id="priceDisplay"
+                    >${displayPrice.toFixed(2)}</span
+                  >
                   <span class="text-lg text-neutral-400">USD</span>
                 </div>
 
                 <!-- Descripción de la opción seleccionada -->
                 <div id="optionDescription" class="text-sm text-neutral-400">
-                  Archivos de instalación completos + instrucciones paso a paso. Conservas los instaladores para uso futuro y tienes flexibilidad total para instalar cuando desees.
+                  Archivos de instalación completos + instrucciones paso a paso.
+                  Conservas los instaladores para uso futuro y tienes
+                  flexibilidad total para instalar cuando desees.
                 </div>
               </div>
             </div>
@@ -142,9 +180,9 @@ const displayLinkPayment = tool.linkPayment || '#';
 
           <!-- Purchase Section -->
           <div class="space-y-4">
-            <a 
-              href={displayLinkPayment} 
-              target="_blank" 
+            <a
+              href={displayLinkPayment}
+              target="_blank"
               rel="noopener noreferrer"
               class="block w-full"
               id="buyButton"
@@ -159,8 +197,12 @@ const displayLinkPayment = tool.linkPayment || '#';
                 <span id="buttonText">Comprar Ahora</span>
               </button>
             </a>
-            <div class="text-center text-xs text-neutral-400" id="disclaimerText">
-              No ofrecemos devoluciones, así que asegúrate de revisar bien los requisitos.
+            <div
+              class="text-center text-xs text-neutral-400"
+              id="disclaimerText"
+            >
+              No ofrecemos devoluciones, así que asegúrate de revisar bien los
+              requisitos.
             </div>
           </div>
         </div>
@@ -170,9 +212,13 @@ const displayLinkPayment = tool.linkPayment || '#';
       <div class="mt-16 lg:mt-24 max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- System Requirements -->
-          <div class="bg-neutral-800/50 border border-neutral-700 rounded-lg p-6">
+          <div
+            class="bg-neutral-800/50 border border-neutral-700 rounded-lg p-6"
+          >
             <div class="mb-6">
-              <h3 class="text-white font-semibold text-xl flex items-center gap-3">
+              <h3
+                class="text-white font-semibold text-xl flex items-center gap-3"
+              >
                 <Monitor class="h-6 w-6" />
                 Información Adicional
               </h3>
@@ -184,9 +230,7 @@ const displayLinkPayment = tool.linkPayment || '#';
                     <Monitor class="h-4 w-4" />
                     Sistema Operativo
                   </p>
-                  <p class="text-white font-medium">
-                    macOS 14 hasta 26.0
-                  </p>
+                  <p class="text-white font-medium">macOS 14 hasta 26.0</p>
                 </div>
 
                 <div class="space-y-2">
@@ -194,9 +238,7 @@ const displayLinkPayment = tool.linkPayment || '#';
                     <Languages class="h-4 w-4" />
                     Idioma del Software
                   </p>
-                  <p class="text-white font-medium">
-                    Inglés / US
-                  </p>
+                  <p class="text-white font-medium">Inglés / US</p>
                 </div>
 
                 <div class="space-y-2">
@@ -204,9 +246,7 @@ const displayLinkPayment = tool.linkPayment || '#';
                     <Cpu class="h-4 w-4" />
                     RAM Mínima
                   </p>
-                  <p class="text-white font-medium">
-                    8 GB
-                  </p>
+                  <p class="text-white font-medium">8 GB</p>
                 </div>
 
                 <div class="space-y-2">
@@ -223,9 +263,13 @@ const displayLinkPayment = tool.linkPayment || '#';
           </div>
 
           <!-- Features & Info -->
-          <div class="bg-neutral-800/50 border border-neutral-700 rounded-lg p-6">
+          <div
+            class="bg-neutral-800/50 border border-neutral-700 rounded-lg p-6"
+          >
             <div class="mb-6">
-              <h3 class="text-white capitalize font-semibold text-xl flex items-center gap-3">
+              <h3
+                class="text-white capitalize font-semibold text-xl flex items-center gap-3"
+              >
                 <ShoppingBasket class="h-6 w-6" />
                 Opciones de Instalación
               </h3>
@@ -233,27 +277,33 @@ const displayLinkPayment = tool.linkPayment || '#';
             <div class="space-y-6">
               <!-- Información General -->
               <div class="pt-4 border-t border-neutral-700">
-                <h5 class="text-white font-medium mb-2">Información General:</h5>
-                <ul class="list-disc list-inside text-neutral-400 font-medium space-y-1 text-sm">
+                <h5 class="text-white font-medium mb-2">
+                  Información General:
+                </h5>
+                <ul
+                  class="list-disc list-inside text-neutral-400 font-medium space-y-1 text-sm"
+                >
                   <li>Activado de por vida (único pago)</li>
                   <li>Compatible con chips M1, M2, M3 y M4</li>
                   <li>Soporte por correo electrónico incluido</li>
                 </ul>
               </div>
-              
+
               <div class="space-y-2">
                 <div class="flex flex-wrap gap-2">
-                  {tags.map((tag: string) => (
-                    <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">
-                      {tag}
-                    </span>
-                  ))}
+                  {
+                    tags.map((tag: string) => (
+                      <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">
+                        {tag}
+                      </span>
+                    ))
+                  }
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- Nota sobre futuras características -->
         <!-- <div class="mt-8 text-center text-neutral-500 text-sm">
           <p>💡 Próximamente: Sistema de reseñas y cupones de descuento para compradores</p>
@@ -266,112 +316,137 @@ const displayLinkPayment = tool.linkPayment || '#';
 <script>
   // Load lite-youtube web component client-side only
   function loadLiteYoutube() {
-    if (typeof window !== 'undefined' && !customElements.get('lite-youtube')) {
+    if (typeof window !== "undefined" && !customElements.get("lite-youtube")) {
       // Use dynamic import to load the web component
-      import('@justinribeiro/lite-youtube').catch(console.error);
+      import("@justinribeiro/lite-youtube").catch(console.error);
     }
   }
 
   // Load on page load and after page transitions
   loadLiteYoutube();
-  document.addEventListener('astro:page-load', loadLiteYoutube);
+  document.addEventListener("astro:page-load", loadLiteYoutube);
 </script>
 
 <script>
   function initProductPage() {
     // Configuración simplificada de opciones
-    const productPrice = parseFloat(document.getElementById('priceDisplay')?.textContent?.replace('$', '') || '40');
-    const productName = document.querySelector('h1')?.textContent || 'Producto';
-    
+    const productPrice = parseFloat(
+      document.getElementById("priceDisplay")?.textContent?.replace("$", "") ||
+        "40",
+    );
+    const productName = document.querySelector("h1")?.textContent || "Producto";
+
     const options = {
       files: {
         price: productPrice,
-        description: 'Archivos de instalación completos. Conservas los instaladores para uso futuro y tienes flexibilidad total para instalar cuando desees.',
-        buttonText: 'Comprar Ahora',
-        buttonIcon: 'cart',
-        disclaimer: 'No ofrecemos devoluciones, así que asegúrate de <a href="https://youtu.be/fPpHrKAPWmw" target="_blank" class="text-blue-400 hover:text-blue-300 underline">instalar la app primero</a>.',
-        linkType: 'payment'
+        description:
+          "Archivos de instalación completos. Conservas los instaladores para uso futuro y tienes flexibilidad total para instalar cuando desees.",
+        buttonText: "Comprar Ahora",
+        buttonIcon: "cart",
+        disclaimer:
+          'No ofrecemos devoluciones, así que asegúrate de <a href="https://youtu.be/fPpHrKAPWmw" target="_blank" class="text-blue-400 hover:text-blue-300 underline">instalar la app primero</a>.',
+        linkType: "payment",
       },
       remote: {
         price: 15.99,
-        description: 'Instalación completa por nuestro equipo vía AnyDesk. Sin archivos, solo instalación profesional con acompañamiento en tiempo real.',
-        buttonText: 'Reservar Instalación',
-        buttonIcon: 'calendar',
-        disclaimer: 'Serás redirigido al formulario de contacto para coordinar la instalación.',
-        linkType: 'contact'
-      }
+        description:
+          "Instalación completa por nuestro equipo vía AnyDesk. Sin archivos, solo instalación profesional con acompañamiento en tiempo real.",
+        buttonText: "Reservar Instalación",
+        buttonIcon: "calendar",
+        disclaimer:
+          "Serás redirigido al formulario de contacto para coordinar la instalación.",
+        linkType: "contact",
+      },
     };
 
     // Elementos del DOM con casting correcto
     const elements = {
-      tabs: document.querySelectorAll('.option-tab'),
-      buyButton: document.getElementById('buyButton') as HTMLAnchorElement,
-      mainButton: document.getElementById('mainButton') as HTMLButtonElement,
-      buttonText: document.getElementById('buttonText'),
-      disclaimerText: document.getElementById('disclaimerText'),
-      cartIcon: document.getElementById('buttonIcon'),
-      calendarIcon: document.getElementById('calendarIcon'),
-      clockIcon: document.getElementById('clockIcon'),
-      priceDisplay: document.getElementById('priceDisplay'),
-      optionDescription: document.getElementById('optionDescription')
+      tabs: document.querySelectorAll(".option-tab"),
+      buyButton: document.getElementById("buyButton") as HTMLAnchorElement,
+      mainButton: document.getElementById("mainButton") as HTMLButtonElement,
+      buttonText: document.getElementById("buttonText"),
+      disclaimerText: document.getElementById("disclaimerText"),
+      cartIcon: document.getElementById("buttonIcon"),
+      calendarIcon: document.getElementById("calendarIcon"),
+      clockIcon: document.getElementById("clockIcon"),
+      priceDisplay: document.getElementById("priceDisplay"),
+      optionDescription: document.getElementById("optionDescription"),
     };
 
     // Verificar si hay link de pago válido
-    const hasPaymentLink = elements.buyButton?.href && 
-                          !elements.buyButton.href.endsWith('#') && 
-                          elements.buyButton.href !== window.location.href;
-    
+    const hasPaymentLink =
+      elements.buyButton?.href &&
+      !elements.buyButton.href.endsWith("#") &&
+      elements.buyButton.href !== window.location.href;
+
     // Guardar link original solo una vez
-    if (hasPaymentLink && elements.buyButton && !elements.buyButton.dataset.originalHref) {
+    if (
+      hasPaymentLink &&
+      elements.buyButton &&
+      !elements.buyButton.dataset.originalHref
+    ) {
       elements.buyButton.dataset.originalHref = elements.buyButton.href;
     }
 
     // Función para alternar iconos
     function toggleIcons(activeIcon: string) {
-      const icons = [elements.cartIcon, elements.calendarIcon, elements.clockIcon];
-      icons.forEach(icon => icon?.classList.add('hidden'));
-      
-      if (activeIcon === 'cartIcon' && elements.cartIcon) {
-        elements.cartIcon.classList.remove('hidden');
-      } else if (activeIcon === 'calendarIcon' && elements.calendarIcon) {
-        elements.calendarIcon.classList.remove('hidden');
-      } else if (activeIcon === 'clockIcon' && elements.clockIcon) {
-        elements.clockIcon.classList.remove('hidden');
+      const icons = [
+        elements.cartIcon,
+        elements.calendarIcon,
+        elements.clockIcon,
+      ];
+      icons.forEach((icon) => icon?.classList.add("hidden"));
+
+      if (activeIcon === "cartIcon" && elements.cartIcon) {
+        elements.cartIcon.classList.remove("hidden");
+      } else if (activeIcon === "calendarIcon" && elements.calendarIcon) {
+        elements.calendarIcon.classList.remove("hidden");
+      } else if (activeIcon === "clockIcon" && elements.clockIcon) {
+        elements.clockIcon.classList.remove("hidden");
       }
     }
 
     // Función para alternar tabs
     function toggleTabs(activeOption: string) {
-      elements.tabs.forEach(tab => {
+      elements.tabs.forEach((tab) => {
         const button = tab as HTMLButtonElement;
         const isActive = button.dataset.option === activeOption;
-        button.classList.toggle('bg-blue-600', isActive);
-        button.classList.toggle('text-white', isActive);
-        button.classList.toggle('text-neutral-400', !isActive);
-        button.classList.toggle('hover:text-white', !isActive);
+        button.classList.toggle("bg-blue-600", isActive);
+        button.classList.toggle("text-white", isActive);
+        button.classList.toggle("text-neutral-400", !isActive);
+        button.classList.toggle("hover:text-white", !isActive);
       });
     }
 
     // Función para actualizar estado del botón
     function updateButtonState(option: string, config: typeof options.files) {
-      if (!elements.mainButton || !elements.buttonText || !elements.disclaimerText || !elements.buyButton) return;
+      if (
+        !elements.mainButton ||
+        !elements.buttonText ||
+        !elements.disclaimerText ||
+        !elements.buyButton
+      )
+        return;
 
-      if (option === 'files' && !hasPaymentLink) {
+      if (option === "files" && !hasPaymentLink) {
         // Producto no disponible
         elements.mainButton.disabled = true;
-        elements.mainButton.className = 'w-full h-14 text-lg font-semibold bg-neutral-600 text-neutral-300 cursor-not-allowed border-0 rounded-full flex items-center justify-center gap-2';
-        elements.buttonText.textContent = 'Próximamente';
-        elements.disclaimerText.innerHTML = 'Estamos migrando este producto. Pronto estará disponible.';
-        elements.buyButton.style.pointerEvents = 'none';
-        toggleIcons('clockIcon');
+        elements.mainButton.className =
+          "w-full h-14 text-lg font-semibold bg-neutral-600 text-neutral-300 cursor-not-allowed border-0 rounded-full flex items-center justify-center gap-2";
+        elements.buttonText.textContent = "Próximamente";
+        elements.disclaimerText.innerHTML =
+          "Estamos migrando este producto. Pronto estará disponible.";
+        elements.buyButton.style.pointerEvents = "none";
+        toggleIcons("clockIcon");
       } else {
         // Producto disponible
         elements.mainButton.disabled = false;
-        elements.mainButton.className = 'w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2';
+        elements.mainButton.className =
+          "w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2";
         elements.buttonText.textContent = config.buttonText;
         elements.disclaimerText.innerHTML = config.disclaimer;
-        elements.buyButton.style.pointerEvents = 'auto';
-        toggleIcons(config.buttonIcon === 'cart' ? 'cartIcon' : 'calendarIcon');
+        elements.buyButton.style.pointerEvents = "auto";
+        toggleIcons(config.buttonIcon === "cart" ? "cartIcon" : "calendarIcon");
       }
     }
 
@@ -379,26 +454,27 @@ const displayLinkPayment = tool.linkPayment || '#';
     function updateLink(config: typeof options.files) {
       if (!elements.buyButton) return;
 
-      if (config.linkType === 'contact') {
+      if (config.linkType === "contact") {
         const params = new URLSearchParams({
           subject: `Instalación Remota - ${productName}`,
-          category: 'soporte',
-          message: `Hola, estoy interesado en el servicio de Instalación Remota para ${productName}.\n\nPor favor, indíquenme los próximos pasos para agendar la instalación.\n\nGracias.`
+          category: "soporte",
+          message: `Hola, estoy interesado en el servicio de Instalación Remota para ${productName}.\n\nPor favor, indíquenme los próximos pasos para agendar la instalación.\n\nGracias.`,
         });
         elements.buyButton.href = `/contacto?${params}`;
-        elements.buyButton.target = '_self';
+        elements.buyButton.target = "_self";
       } else if (hasPaymentLink) {
-        elements.buyButton.href = elements.buyButton.dataset.originalHref || '#';
-        elements.buyButton.target = '_blank';
+        elements.buyButton.href =
+          elements.buyButton.dataset.originalHref || "#";
+        elements.buyButton.target = "_blank";
       }
     }
 
     // Función principal para actualizar UI
-    function updateUI(option: 'files' | 'remote') {
+    function updateUI(option: "files" | "remote") {
       const config = options[option];
-      
+
       if (!elements.priceDisplay || !elements.optionDescription) return;
-      
+
       // Actualizar elementos de forma eficiente
       toggleTabs(option);
       elements.priceDisplay.textContent = `$${config.price.toFixed(2)}`;
@@ -408,19 +484,19 @@ const displayLinkPayment = tool.linkPayment || '#';
     }
 
     // Event listeners para tabs
-    elements.tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
+    elements.tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
         const button = tab as HTMLButtonElement;
-        const option = button.dataset.option as 'files' | 'remote';
+        const option = button.dataset.option as "files" | "remote";
         if (option) updateUI(option);
       });
     });
 
     // Inicializar con opción por defecto
-    updateUI('files');
+    updateUI("files");
   }
 
   // Ejecutar en carga inicial y después de navegaciones
   initProductPage();
-  document.addEventListener('astro:page-load', initProductPage);
+  document.addEventListener("astro:page-load", initProductPage);
 </script>

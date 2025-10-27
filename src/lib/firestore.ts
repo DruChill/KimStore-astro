@@ -10,6 +10,7 @@ export interface CreativeTool {
   linkPayment?: string;
   status?: string;
   tags?: string[];
+  videoId?: string;
   lastUpdated?: Date; // Ya convertido de Timestamp a Date
   videoUrl?: string;
 }

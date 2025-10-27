@@ -256,7 +256,7 @@ const lastUpdated = tool.lastUpdated;
         description: 'Archivos de instalación completos. Conservas los instaladores para uso futuro y tienes flexibilidad total para instalar cuando desees.',
         buttonText: 'Comprar Ahora',
         buttonIcon: 'cart',
-        disclaimer: 'No ofrecemos devoluciones, así que asegúrate de instalar la app primero.',
+        disclaimer: 'No ofrecemos devoluciones, así que asegúrate de <a href="https://youtu.be/fPpHrKAPWmw" target="_blank" class="text-blue-400 hover:text-blue-300 underline">instalar la app primero</a>.',
         linkType: 'payment'
       },
       remote: {
@@ -328,7 +328,7 @@ const lastUpdated = tool.lastUpdated;
         elements.mainButton.disabled = true;
         elements.mainButton.className = 'w-full h-14 text-lg font-semibold bg-neutral-600 text-neutral-300 cursor-not-allowed border-0 rounded-full flex items-center justify-center gap-2';
         elements.buttonText.textContent = 'Próximamente';
-        elements.disclaimerText.textContent = 'Estamos migrando este producto. Pronto estará disponible.';
+        elements.disclaimerText.innerHTML = 'Estamos migrando este producto. Pronto estará disponible.';
         elements.buyButton.style.pointerEvents = 'none';
         toggleIcons('clockIcon');
       } else {
@@ -336,7 +336,7 @@ const lastUpdated = tool.lastUpdated;
         elements.mainButton.disabled = false;
         elements.mainButton.className = 'w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-full transition-all duration-200 hover:scale-[1.02] flex items-center justify-center gap-2';
         elements.buttonText.textContent = config.buttonText;
-        elements.disclaimerText.textContent = config.disclaimer;
+        elements.disclaimerText.innerHTML = config.disclaimer;
         elements.buyButton.style.pointerEvents = 'auto';
         toggleIcons(config.buttonIcon === 'cart' ? 'cartIcon' : 'calendarIcon');
       }

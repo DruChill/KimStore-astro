@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@justinribeiro/lite-youtube": "^1.8.2",
     "@microsoft/clarity": "^1.0.0",
     "@tailwindcss/vite": "^4.1.15",
     "astro": "^5.14.8",

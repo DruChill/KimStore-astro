@@ -31,7 +31,7 @@ const {
           height="32"
           class="w-8 h-8"
           transition:name={`product-icon-${id}`}
-          transition:animate="morph"
+          transition:animate="fade"
         />
       <img
           src="/apple.svg"
@@ -45,7 +45,7 @@ const {
   <!-- Precio -->
   <div>
     <p class="mb-1 text-2xl font-semibold text-black leading-snug">
-      $15.99<span class="text-base font-normal text-gray-700">/Pago único</span>
+      ${price.toFixed(2)}<span class="text-base font-normal text-gray-700">/Pago único</span>
     </p>
     <img src="/paypal.svg" alt="paypal-icon" class="w-12 h-auto" />
   </div>

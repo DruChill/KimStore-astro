@@ -1,6 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-astro';
+import Layout from "../layouts/Layout.astro";
+import {
+	Mail,
+	MessageCircle,
+	Send,
+	MessageCircleQuestion,
+} from "lucide-astro";
 ---
 
 <Layout title="Contacto | KimYuna" currentPath="/contacto">
@@ -18,26 +23,41 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 				<!-- Formulario de Contacto -->
 				<div class="lg:col-span-2">
-					<form action="https://formspree.io/f/mlekepaw" method="POST">
+					<form
+						action="https://formspree.io/f/mlekepaw"
+						method="POST"
+					>
 						<!-- Card -->
-						<div class="bg-neutral-800 border border-neutral-700 rounded-lg overflow-hidden">
+						<div
+							class="bg-neutral-800 border border-neutral-700 rounded-lg overflow-hidden"
+						>
 							<!-- Card Header -->
 							<div class="p-6 border-b border-neutral-700">
-								<h3 class="text-xl font-semibold flex items-center gap-2">
+								<h3
+									class="text-xl font-semibold flex items-center gap-2"
+								>
 									<MessageCircle class="h-5 w-5" />
 									Envíanos un mensaje
 								</h3>
 								<p class="text-sm text-gray-400 mt-2">
-									Completa el formulario y te responderemos lo antes posible
+									Completa el formulario y te responderemos lo
+									antes posible
 								</p>
 							</div>
 
 							<!-- Card Content -->
 							<div class="p-6 space-y-6">
-								<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<div
+									class="grid grid-cols-1 md:grid-cols-2 gap-4"
+								>
 									<div class="space-y-2">
-										<label for="email" class="block text-sm font-medium">
-											Correo electrónico <span class="text-red-500">*</span>
+										<label
+											for="email"
+											class="block text-sm font-medium"
+										>
+											Correo electrónico <span
+												class="text-red-500">*</span
+											>
 										</label>
 										<input
 											id="email"
@@ -50,8 +70,13 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 									</div>
 
 									<div class="space-y-2">
-										<label for="subject" class="block text-sm font-medium">
-											Asunto <span class="text-red-500">*</span>
+										<label
+											for="subject"
+											class="block text-sm font-medium"
+										>
+											Asunto <span class="text-red-500"
+												>*</span
+											>
 										</label>
 										<input
 											id="subject"
@@ -64,7 +89,10 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 								</div>
 
 								<div class="space-y-2">
-									<label for="category" class="block text-sm font-medium">
+									<label
+										for="category"
+										class="block text-sm font-medium"
+									>
 										Categoría
 									</label>
 									<select
@@ -72,17 +100,30 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 										name="category"
 										class="w-full px-3 py-2 bg-neutral-900 border border-neutral-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
 									>
-										<option value="">Selecciona una categoría</option>
-										<option value="soporte">Soporte técnico</option>
-										<option value="productos">Consulta sobre productos</option>
-										<option value="link-caido">Reportar link caído</option>
+										<option value=""
+											>Selecciona una categoría</option
+										>
+										<option value="soporte"
+											>Soporte técnico</option
+										>
+										<option value="productos"
+											>Consulta sobre productos</option
+										>
+										<option value="link-caido"
+											>Reportar link caído</option
+										>
 										<option value="otro">Otro</option>
 									</select>
 								</div>
 
 								<div class="space-y-2">
-									<label for="message" class="block text-sm font-medium">
-										Mensaje <span class="text-red-500">*</span>
+									<label
+										for="message"
+										class="block text-sm font-medium"
+									>
+										Mensaje <span class="text-red-500"
+											>*</span
+										>
 									</label>
 									<textarea
 										id="message"
@@ -115,32 +156,60 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 				<!-- Información de Contacto -->
 				<div class="space-y-6">
 					<!-- Información General -->
-					<div class="bg-neutral-800 border border-neutral-700 rounded-lg overflow-hidden">
+					<div
+						class="bg-neutral-800 border border-neutral-700 rounded-lg overflow-hidden"
+					>
 						<div class="p-6 border-b border-neutral-700">
-							<h3 class="text-xl font-semibold flex items-center gap-2">
+							<h3
+								class="text-xl font-semibold flex items-center gap-2"
+							>
 								<Mail class="h-5 w-5" />
-								Información de contacto
+								Ahora cada vez es más fácil
 							</h3>
 						</div>
 
 						<div class="p-6 space-y-4">
 							<div class="flex items-start gap-3">
-								<Clock class="h-5 w-5 text-gray-400 mt-0.5" />
+								<a
+									href="https://wa.me/51910965369?text=Hola,%20estoy%20interesado%20en%20los%20productos%20de%20KimYuna%20Store.%20¿Podrían%20ayudarme%20con%20información%20sobre%20sus%20servicios?"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="inline-flex items-center gap-2 text-sm text-green-400 hover:text-green-300 transition-colors"
+								>
+									<img
+										src="/whatsapp-color-icon.svg"
+										alt="WhatsApp"
+										class="w-8 h-8"
+									/>
+								</a>
 								<div>
-									<p class="font-medium">Horario de respuesta</p>
+									<p class="font-medium">WhatsApp</p>
 									<p class="text-sm text-gray-400">
 										Lunes a Sábado<br />
-										9:00 AM - 10:00 PM (GMT-5)
+										9:00 AM - 11:00 PM (GMT-5)
 									</p>
 								</div>
 							</div>
 
 							<div class="flex items-start gap-3">
-								<MessageCircle class="h-5 w-5 text-gray-400 mt-0.5" />
+								<a
+									href="https://t.me/DruLGD?text=Hola,%20estoy%20interesado%20en%20los%20productos%20de%20KimYuna%20Store.%20¿Podrían%20ayudarme%20con%20información%20sobre%20sus%20servicios?"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+								>
+									<img
+										src="/telegram-icon.svg"
+										alt="Telegram"
+										class="w-8 h-8"
+									/>
+								</a>
 								<div>
-									<p class="font-medium">Tiempo de respuesta</p>
+									<p class="font-medium">
+										Tiempo de respuesta
+									</p>
 									<p class="text-sm text-gray-400">
-										Usualmente dentro de 2 horas
+										Muy poco usado
 									</p>
 								</div>
 							</div>
@@ -148,9 +217,13 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 					</div>
 
 					<!-- FAQ Rápido -->
-					<div class="bg-neutral-800 border border-neutral-700 rounded-lg overflow-hidden">
+					<div
+						class="bg-neutral-800 border border-neutral-700 rounded-lg overflow-hidden"
+					>
 						<div class="p-6 border-b border-neutral-700">
-							<h3 class="text-xl font-semibold flex items-center gap-2">
+							<h3
+								class="text-xl font-semibold flex items-center gap-2"
+							>
 								<MessageCircleQuestion class="h-5 w-5" />
 								Preguntas frecuentes
 							</h3>
@@ -158,26 +231,38 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 
 						<div class="p-6 space-y-4">
 							<div>
-								<p class="font-medium text-sm">¿Cómo descargo mis productos?</p>
+								<p class="font-medium text-sm">
+									¿Cómo descargo mis productos?
+								</p>
 								<p class="text-xs text-gray-400 mt-1">
-									Después del pago, recibirás un correo con enlaces de descarga, también puedes acceder a ellos en tu dashboard.
+									Después del pago, recibirás un correo con
+									enlaces de descarga, también puedes acceder
+									a ellos en tu dashboard.
 								</p>
 							</div>
 
 							<div>
-								<p class="font-medium text-sm">¿Puedo solicitar un reembolso?</p>
+								<p class="font-medium text-sm">
+									¿Puedo solicitar un reembolso?
+								</p>
 								<p class="text-xs text-gray-400 mt-1">
 									No, revisa nuestra{" "}
-									<a href="/policies/reembolsos" class="text-blue-500 hover:underline">
+									<a
+										href="/policies/reembolsos"
+										class="text-blue-500 hover:underline"
+									>
 										política de reembolsos
 									</a>
 								</p>
 							</div>
 
 							<div>
-								<p class="font-medium text-sm">¿Ofrecen soporte técnico?</p>
+								<p class="font-medium text-sm">
+									¿Ofrecen soporte técnico?
+								</p>
 								<p class="text-xs text-gray-400 mt-1">
-									Sí, puedes contactarnos a través de este formulario para cualquier consulta técnica.
+									Sí, puedes contactarnos a través de este
+									formulario para cualquier consulta técnica.
 								</p>
 							</div>
 						</div>
@@ -192,25 +277,31 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 	// Llenar formulario con parámetros de URL del lado del cliente
 	function fillFormFromURL() {
 		const urlParams = new URLSearchParams(window.location.search);
-		
-		const subject = urlParams.get('subject');
-		const category = urlParams.get('category');
-		const message = urlParams.get('message');
+
+		const subject = urlParams.get("subject");
+		const category = urlParams.get("category");
+		const message = urlParams.get("message");
 
 		// Llenar los campos si hay valores en la URL
 		// URLSearchParams.get() ya decodifica automáticamente, no necesitamos decodeURIComponent
 		if (subject) {
-			const subjectInput = document.getElementById('subject') as HTMLInputElement;
+			const subjectInput = document.getElementById(
+				"subject",
+			) as HTMLInputElement;
 			if (subjectInput) subjectInput.value = subject;
 		}
 
 		if (category) {
-			const categorySelect = document.getElementById('category') as HTMLSelectElement;
+			const categorySelect = document.getElementById(
+				"category",
+			) as HTMLSelectElement;
 			if (categorySelect) categorySelect.value = category;
 		}
 
 		if (message) {
-			const messageTextarea = document.getElementById('message') as HTMLTextAreaElement;
+			const messageTextarea = document.getElementById(
+				"message",
+			) as HTMLTextAreaElement;
 			if (messageTextarea) messageTextarea.value = message;
 		}
 	}
@@ -219,5 +310,5 @@ import { Mail, MessageCircle, Clock, Send, MessageCircleQuestion } from 'lucide-
 	fillFormFromURL();
 
 	// También ejecutar después de navegaciones con View Transitions
-	document.addEventListener('astro:page-load', fillFormFromURL);
+	document.addEventListener("astro:page-load", fillFormFromURL);
 </script>
